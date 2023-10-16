@@ -8,15 +8,7 @@
 import UIKit
 import AVFoundation
 import Photos
-import CoreTelephony
-import Contacts
-import EventKit
-import MediaPlayer
-import Speech
-import Intents
-import CoreMotion
-import AdSupport
-import AppTrackingTransparency
+
 /// 权限类型
 public enum QAuthorizationType: String {
     /// 相机
@@ -124,20 +116,20 @@ public struct QuicklyAuthorization {
 /// 权限获取
 class QuicklyAuthorizationHelper {
     /// 定位
-    var locationWhenInUse: QLocationAuthorization?
-    /// 长定位
-    var locationAlways: QLocationAuthorization?
-    private var _montion: Any? = nil
-    /// 活动与体能训练记录
-    @available(iOS 11.0, *)
-    var motion: QMotionAuthorization? {
-        get {
-            return _montion as? QMotionAuthorization
-        }
-        set {
-            _montion = newValue
-        }
-    }
+//    var locationWhenInUse: QLocationAuthorization?
+//    /// 长定位
+//    var locationAlways: QLocationAuthorization?
+//    private var _montion: Any? = nil
+//    /// 活动与体能训练记录
+//    @available(iOS 11.0, *)
+//    var motion: QMotionAuthorization? {
+//        get {
+//            return _montion as? QMotionAuthorization
+//        }
+//        set {
+//            _montion = newValue
+//        }
+//    }
     /// 相机
     func requestCamera(result: ((_ result: QAuthorizationResult) -> Void)?) {
         let status = AVCaptureDevice.authorizationStatus(for: .video)
@@ -196,313 +188,313 @@ class QuicklyAuthorizationHelper {
             result?(res)
         }
     }
-    /// 麦克风
-    func requestMicrophone(result: ((_ result: QAuthorizationResult) -> Void)?) {
-        let status = AVCaptureDevice.authorizationStatus(for: .audio)
-        switch status {
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .audio) { [weak self] granted in
-                self?.requestMicrophone(result: result)
-            }
-        case .restricted, .denied:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        case .authorized:
-            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
-            result?(res)
-        @unknown default:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        }
-    }
+//    /// 麦克风
+//    func requestMicrophone(result: ((_ result: QAuthorizationResult) -> Void)?) {
+//        let status = AVCaptureDevice.authorizationStatus(for: .audio)
+//        switch status {
+//        case .notDetermined:
+//            AVCaptureDevice.requestAccess(for: .audio) { [weak self] granted in
+//                self?.requestMicrophone(result: result)
+//            }
+//        case .restricted, .denied:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        case .authorized:
+//            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
+//            result?(res)
+//        @unknown default:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        }
+//    }
     /// 通知权限
-    func requestNotification(result: ((_ result: QAuthorizationResult) -> Void)?) {
-        func handle(status: UNAuthorizationStatus) {
-            switch status {
-            case .notDetermined:
-                UNUserNotificationCenter.current().requestAuthorization { [weak self] _, _ in
-                    self?.requestNotification(result: result)
-                }
-            case .denied:
-                let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-                result?(res)
-            case .authorized:
-                let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
-                result?(res)
-            case .provisional, .ephemeral:
-                let res = QAuthorizationResult.init(granted: true, limit: true, status: status)
-                result?(res)
-            @unknown default:
-                let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-                result?(res)
-            }
-        }
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            let status = settings.authorizationStatus
-            handle(status: status)
-        }
-    }
+//    func requestNotification(result: ((_ result: QAuthorizationResult) -> Void)?) {
+//        func handle(status: UNAuthorizationStatus) {
+//            switch status {
+//            case .notDetermined:
+//                UNUserNotificationCenter.current().requestAuthorization { [weak self] _, _ in
+//                    self?.requestNotification(result: result)
+//                }
+//            case .denied:
+//                let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//                result?(res)
+//            case .authorized:
+//                let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
+//                result?(res)
+//            case .provisional, .ephemeral:
+//                let res = QAuthorizationResult.init(granted: true, limit: true, status: status)
+//                result?(res)
+//            @unknown default:
+//                let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//                result?(res)
+//            }
+//        }
+//        UNUserNotificationCenter.current().getNotificationSettings { settings in
+//            let status = settings.authorizationStatus
+//            handle(status: status)
+//        }
+//    }
     /// 通讯录
-    func requestContact(result: ((_ result: QAuthorizationResult) -> Void)?) {
-        let status = CNContactStore.authorizationStatus(for: .contacts)
-        switch status {
-        case .notDetermined:
-            CNContactStore().requestAccess(for: .contacts) { [weak self] _, _ in
-                self?.requestContact(result: result)
-            }
-        case .restricted, .denied:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        case .authorized:
-            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
-            result?(res)
-        @unknown default:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        }
-    }
+//    func requestContact(result: ((_ result: QAuthorizationResult) -> Void)?) {
+//        let status = CNContactStore.authorizationStatus(for: .contacts)
+//        switch status {
+//        case .notDetermined:
+//            CNContactStore().requestAccess(for: .contacts) { [weak self] _, _ in
+//                self?.requestContact(result: result)
+//            }
+//        case .restricted, .denied:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        case .authorized:
+//            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
+//            result?(res)
+//        @unknown default:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        }
+//    }
     /// app使用中的 定位权限
-    func requestLocation(type: CLAuthorizationStatus, result: ((_ result: QAuthorizationResult) -> Void)?) {
-        guard CLLocationManager.locationServicesEnabled() else {
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: 0, message: "未开启GPS服务")
-            result?(res)
-            return
-        }
-        let status = CLLocationManager.authorizationStatus()
-        switch status {
-        case .notDetermined:
-            if type == .authorizedWhenInUse {
-                self.locationWhenInUse = .init(type: type)
-                self.locationWhenInUse?.requestAuthorization(status: { [weak self] status in
-                    self?.locationWhenInUse = nil
-                    self?.requestLocation(type: type, result: result)
-                })
-            } else {
-                self.locationAlways = .init(type: type)
-                self.locationAlways?.requestAuthorization(status: { [weak self] status in
-                    self?.locationAlways = nil
-                    self?.requestLocation(type: type, result: result)
-                })
-            }
-        case .restricted, .denied:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        case .authorizedAlways:
-            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
-            result?(res)
-        case .authorizedWhenInUse:
-            let res = QAuthorizationResult.init(granted: type == .authorizedWhenInUse, limit: false, status: status)
-            result?(res)
-        case .authorized:
-            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
-            result?(res)
-        @unknown default:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        }
-    }
+//    func requestLocation(type: CLAuthorizationStatus, result: ((_ result: QAuthorizationResult) -> Void)?) {
+//        guard CLLocationManager.locationServicesEnabled() else {
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: 0, message: "未开启GPS服务")
+//            result?(res)
+//            return
+//        }
+//        let status = CLLocationManager.authorizationStatus()
+//        switch status {
+//        case .notDetermined:
+//            if type == .authorizedWhenInUse {
+//                self.locationWhenInUse = .init(type: type)
+//                self.locationWhenInUse?.requestAuthorization(status: { [weak self] status in
+//                    self?.locationWhenInUse = nil
+//                    self?.requestLocation(type: type, result: result)
+//                })
+//            } else {
+//                self.locationAlways = .init(type: type)
+//                self.locationAlways?.requestAuthorization(status: { [weak self] status in
+//                    self?.locationAlways = nil
+//                    self?.requestLocation(type: type, result: result)
+//                })
+//            }
+//        case .restricted, .denied:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        case .authorizedAlways:
+//            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
+//            result?(res)
+//        case .authorizedWhenInUse:
+//            let res = QAuthorizationResult.init(granted: type == .authorizedWhenInUse, limit: false, status: status)
+//            result?(res)
+//        case .authorized:
+//            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
+//            result?(res)
+//        @unknown default:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        }
+//    }
     /// 日历
-    func requestEvents(type: EKEntityType, result: ((_ result: QAuthorizationResult) -> Void)?) {
-        let status = EKEventStore.authorizationStatus(for: type)
-        switch status {
-        case .notDetermined:
-            EKEventStore().requestAccess(to: type) { [weak self] _, _ in
-                self?.requestEvents(type: type, result: result)
-            }
-        case .restricted, .denied:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        case .authorized:
-            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
-            result?(res)
-        @unknown default:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        }
-    }
+//    func requestEvents(type: EKEntityType, result: ((_ result: QAuthorizationResult) -> Void)?) {
+//        let status = EKEventStore.authorizationStatus(for: type)
+//        switch status {
+//        case .notDetermined:
+//            EKEventStore().requestAccess(to: type) { [weak self] _, _ in
+//                self?.requestEvents(type: type, result: result)
+//            }
+//        case .restricted, .denied:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        case .authorized:
+//            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
+//            result?(res)
+//        @unknown default:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        }
+//    }
     /// apple music
-    func requestAppleMusic(result: ((_ result: QAuthorizationResult) -> Void)?) {
-        let status = MPMediaLibrary.authorizationStatus()
-        switch status {
-        case .notDetermined:
-            MPMediaLibrary.requestAuthorization { status in
-                let r = status == .authorized
-                let res = QAuthorizationResult.init(granted: r, limit: false, status: status)
-                result?(res)
-            }
-        case .denied, .restricted:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        case .authorized:
-            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
-            result?(res)
-        @unknown default:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        }
-    }
+//    func requestAppleMusic(result: ((_ result: QAuthorizationResult) -> Void)?) {
+//        let status = MPMediaLibrary.authorizationStatus()
+//        switch status {
+//        case .notDetermined:
+//            MPMediaLibrary.requestAuthorization { status in
+//                let r = status == .authorized
+//                let res = QAuthorizationResult.init(granted: r, limit: false, status: status)
+//                result?(res)
+//            }
+//        case .denied, .restricted:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        case .authorized:
+//            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
+//            result?(res)
+//        @unknown default:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        }
+//    }
     /// 语言识别权限
-    func requestSpeech(result: ((_ result: QAuthorizationResult) -> Void)?) {
-        let status = SFSpeechRecognizer.authorizationStatus()
-        switch status {
-        case .notDetermined:
-            SFSpeechRecognizer.requestAuthorization { status in
-                let r = status == .authorized
-                let res = QAuthorizationResult.init(granted: r, limit: false, status: status)
-                result?(res)
-            }
-        case .denied, .restricted:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        case .authorized:
-            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
-            result?(res)
-        @unknown default:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        }
-    }
+//    func requestSpeech(result: ((_ result: QAuthorizationResult) -> Void)?) {
+//        let status = SFSpeechRecognizer.authorizationStatus()
+//        switch status {
+//        case .notDetermined:
+//            SFSpeechRecognizer.requestAuthorization { status in
+//                let r = status == .authorized
+//                let res = QAuthorizationResult.init(granted: r, limit: false, status: status)
+//                result?(res)
+//            }
+//        case .denied, .restricted:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        case .authorized:
+//            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
+//            result?(res)
+//        @unknown default:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        }
+//    }
     /// siri权限
-    func requestSiri(result: ((_ result: QAuthorizationResult) -> Void)?) {
-        let status = INPreferences.siriAuthorizationStatus()
-        switch status {
-        case .notDetermined:
-            INPreferences.requestSiriAuthorization { status in
-                let r = status == .authorized
-                let res = QAuthorizationResult.init(granted: r, limit: false, status: status)
-                result?(res)
-            }
-        case .denied, .restricted:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        case .authorized:
-            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
-            result?(res)
-        @unknown default:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        }
-    }
+//    func requestSiri(result: ((_ result: QAuthorizationResult) -> Void)?) {
+//        let status = INPreferences.siriAuthorizationStatus()
+//        switch status {
+//        case .notDetermined:
+//            INPreferences.requestSiriAuthorization { status in
+//                let r = status == .authorized
+//                let res = QAuthorizationResult.init(granted: r, limit: false, status: status)
+//                result?(res)
+//            }
+//        case .denied, .restricted:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        case .authorized:
+//            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
+//            result?(res)
+//        @unknown default:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        }
+//    }
     /// 活动与体能训练记录
-    func requestMotion(result: ((_ result: QAuthorizationResult) -> Void)?) {
-        guard CMMotionActivityManager.isActivityAvailable(), #available(iOS 11.0, *) else {
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: 0, message: "活动与体能训练记录不支持")
-            result?(res)
-            return
-        }
-        let status = CMMotionActivityManager.authorizationStatus()
-        switch status {
-        case .notDetermined:
-            motion = .init()
-            motion?.requestAuthorization(status: {[weak self] status in
-                self?.motion = nil
-                self?.requestMotion(result: result)
-            })
-        case .denied, .restricted:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        case .authorized:
-            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
-            result?(res)
-        @unknown default:
-            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
-            result?(res)
-        }
-    }
+//    func requestMotion(result: ((_ result: QAuthorizationResult) -> Void)?) {
+//        guard CMMotionActivityManager.isActivityAvailable(), #available(iOS 11.0, *) else {
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: 0, message: "活动与体能训练记录不支持")
+//            result?(res)
+//            return
+//        }
+//        let status = CMMotionActivityManager.authorizationStatus()
+//        switch status {
+//        case .notDetermined:
+//            motion = .init()
+//            motion?.requestAuthorization(status: {[weak self] status in
+//                self?.motion = nil
+//                self?.requestMotion(result: result)
+//            })
+//        case .denied, .restricted:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        case .authorized:
+//            let res = QAuthorizationResult.init(granted: true, limit: false, status: status)
+//            result?(res)
+//        @unknown default:
+//            let res = QAuthorizationResult.init(granted: false, limit: false, status: status)
+//            result?(res)
+//        }
+//    }
     /// IDFA广告权限
-    func requestIdfa(result: ((_ result: QAuthorizationResult) -> Void)?) {
-        var uuid = "00000000-0000-0000-0000-000000000000"
-        if #available(iOS 14, *) {
-            let status = ATTrackingManager.trackingAuthorizationStatus
-            switch status {
-            case .notDetermined:
-                ATTrackingManager.requestTrackingAuthorization { [weak self] status in
-                    if status == .notDetermined {
-                        let res = QAuthorizationResult.init(granted: false, limit: false, status: status, message: uuid)
-                        result?(res)
-                        return
-                    }
-                    self?.requestIdfa(result: result)
-                }
-            case .restricted, .denied:
-                let res = QAuthorizationResult.init(granted: false, limit: false, status: status, message: uuid)
-                result?(res)
-            case .authorized:
-                uuid = ASIdentifierManager.shared().advertisingIdentifier.uuidString
-                let res = QAuthorizationResult.init(granted: true, limit: false, status: status, message: uuid)
-                result?(res)
-            @unknown default:
-                let res = QAuthorizationResult.init(granted: false, limit: false, status: status, message: uuid)
-                result?(res)
-            }
-        } else {
-            let enable = ASIdentifierManager.shared().isAdvertisingTrackingEnabled
-            if enable {
-                uuid = ASIdentifierManager.shared().advertisingIdentifier.uuidString
-            }
-            let res = QAuthorizationResult.init(granted: enable, limit: false, status: "", message: uuid)
-            result?(res)
-        }
-    }
+//    func requestIdfa(result: ((_ result: QAuthorizationResult) -> Void)?) {
+//        var uuid = "00000000-0000-0000-0000-000000000000"
+//        if #available(iOS 14, *) {
+//            let status = ATTrackingManager.trackingAuthorizationStatus
+//            switch status {
+//            case .notDetermined:
+//                ATTrackingManager.requestTrackingAuthorization { [weak self] status in
+//                    if status == .notDetermined {
+//                        let res = QAuthorizationResult.init(granted: false, limit: false, status: status, message: uuid)
+//                        result?(res)
+//                        return
+//                    }
+//                    self?.requestIdfa(result: result)
+//                }
+//            case .restricted, .denied:
+//                let res = QAuthorizationResult.init(granted: false, limit: false, status: status, message: uuid)
+//                result?(res)
+//            case .authorized:
+//                uuid = ASIdentifierManager.shared().advertisingIdentifier.uuidString
+//                let res = QAuthorizationResult.init(granted: true, limit: false, status: status, message: uuid)
+//                result?(res)
+//            @unknown default:
+//                let res = QAuthorizationResult.init(granted: false, limit: false, status: status, message: uuid)
+//                result?(res)
+//            }
+//        } else {
+//            let enable = ASIdentifierManager.shared().isAdvertisingTrackingEnabled
+//            if enable {
+//                uuid = ASIdentifierManager.shared().advertisingIdentifier.uuidString
+//            }
+//            let res = QAuthorizationResult.init(granted: enable, limit: false, status: "", message: uuid)
+//            result?(res)
+//        }
+//    }
 }
 
 // MARK: - 定位权限辅助
-class QLocationAuthorization: NSObject, CLLocationManagerDelegate {
-    var complete: ((_ status: CLAuthorizationStatus) -> Void)?
-    
-    lazy var location : CLLocationManager = {
-        let l = CLLocationManager()
-        l.delegate = self
-        return l
-    }()
-    var type : CLAuthorizationStatus
-    init(type: CLAuthorizationStatus) {
-        self.type = type
-    }
-    
-    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        if status == .notDetermined {
-            return
-        }
-        self.complete?(status)
-    }
-    
-    func requestAuthorization(status: ((_ status: CLAuthorizationStatus) -> Void)?) {
-        self.complete = status
-        switch type {
-        case .notDetermined, .restricted, .denied:
-           break
-        case .authorizedAlways:
-            self.location.requestAlwaysAuthorization()
-        case .authorizedWhenInUse:
-            self.location.requestWhenInUseAuthorization()
-        @unknown default:
-            break
-        }
-    }
-}
+//class QLocationAuthorization: NSObject, CLLocationManagerDelegate {
+//    var complete: ((_ status: CLAuthorizationStatus) -> Void)?
+//    
+//    lazy var location : CLLocationManager = {
+//        let l = CLLocationManager()
+//        l.delegate = self
+//        return l
+//    }()
+//    var type : CLAuthorizationStatus
+//    init(type: CLAuthorizationStatus) {
+//        self.type = type
+//    }
+//    
+//    public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+//        if status == .notDetermined {
+//            return
+//        }
+//        self.complete?(status)
+//    }
+//    
+//    func requestAuthorization(status: ((_ status: CLAuthorizationStatus) -> Void)?) {
+//        self.complete = status
+//        switch type {
+//        case .notDetermined, .restricted, .denied:
+//           break
+//        case .authorizedAlways:
+//            self.location.requestAlwaysAuthorization()
+//        case .authorizedWhenInUse:
+//            self.location.requestWhenInUseAuthorization()
+//        @unknown default:
+//            break
+//        }
+//    }
+//}
 
 // MARK: - 活动与体能训练记录
 /// 活动与体能训练记录
-@available(iOS 11.0, *)
-class QMotionAuthorization {
-    var complete: ((_ status: CMAuthorizationStatus) -> Void)?
-    
-    lazy var motionManager: CMMotionActivityManager = {
-        return CMMotionActivityManager()
-    }()
-    func requestAuthorization(status: ((_ status: CMAuthorizationStatus) -> Void)?) {
-        let now = Date()
-        self.complete = status
-        motionManager.queryActivityStarting(from: now, to: now, to: .main) { [weak self] _, error in
-            self?.motionManager.stopActivityUpdates()
-            var status: CMAuthorizationStatus
-            if error != nil {
-                status = .denied
-            } else {
-                status = .authorized
-            }
-            self?.complete?(status)
-        }
-    }
-}
+//@available(iOS 11.0, *)
+//class QMotionAuthorization {
+//    var complete: ((_ status: CMAuthorizationStatus) -> Void)?
+//    
+//    lazy var motionManager: CMMotionActivityManager = {
+//        return CMMotionActivityManager()
+//    }()
+//    func requestAuthorization(status: ((_ status: CMAuthorizationStatus) -> Void)?) {
+//        let now = Date()
+//        self.complete = status
+//        motionManager.queryActivityStarting(from: now, to: now, to: .main) { [weak self] _, error in
+//            self?.motionManager.stopActivityUpdates()
+//            var status: CMAuthorizationStatus
+//            if error != nil {
+//                status = .denied
+//            } else {
+//                status = .authorized
+//            }
+//            self?.complete?(status)
+//        }
+//    }
+//}
