@@ -23,30 +23,30 @@ public enum QAuthorizationType: String {
     case camera = "NSCameraUsageDescription"
     /// 相册 有可能有限制
     case photoLibrary = "NSPhotoLibraryUsageDescription"
-    /// 麦克风
-    case microphone = "NSMicrophoneUsageDescription"
-    /// 通知权限  有可能有限制
-    case notification = "notconfig_notification"
-    /// 通讯录
-    case contact = "NSContactsUsageDescription"
-    /// 定位权限 用户使用过程中
-    case locationWhenInUse = "NSLocationWhenInUseUsageDescription"
-    /// 定位权限 always
-    case locationAlways = "NSLocationAlwaysUsageDescription"
-    /// 日历权限
-    case events = "NSCalendarsUsageDescription"
-    /// 提醒事项
-    case reminder = "NSRemindersUsageDescription"
-    /// apple Music
-    case appleMusic = "NSAppleMusicUsageDescription"
-    /// 语言识别
-    case speech = "NSSpeechRecognitionUsageDescription"
-    /// siri权限
-    case siri = "notconfig_siri"
-    /// 活动与体能训练记录
-    case motion = "NSMotionUsageDescription"
-    /// 广告追踪权限
-    case idfa = "notconfig_idfa"
+//    /// 麦克风
+//    case microphone = "NSMicrophoneUsageDescription"
+//    /// 通知权限  有可能有限制
+//    case notification = "notconfig_notification"
+//    /// 通讯录
+////    case contact = "NSContactsUsageDescription"
+//    /// 定位权限 用户使用过程中
+////    case locationWhenInUse = "NSLocationWhenInUseUsageDescription"
+//    /// 定位权限 always
+////    case locationAlways = "NSLocationAlwaysUsageDescription"
+//    /// 日历权限
+////    case events = "NSCalendarsUsageDescription"
+//    /// 提醒事项
+////    case reminder = "NSRemindersUsageDescription"
+//    /// apple Music
+////    case appleMusic = "NSAppleMusicUsageDescription"
+//    /// 语言识别
+////    case speech = "NSSpeechRecognitionUsageDescription"
+//    /// siri权限
+////    case siri = "notconfig_siri"
+//    /// 活动与体能训练记录
+////    case motion = "NSMotionUsageDescription"
+//    /// 广告追踪权限
+////    case idfa = "notconfig_idfa"
 }
 // MARK: - 权限获取结果
 public struct QAuthorizationResult {
@@ -73,52 +73,52 @@ public struct QuicklyAuthorization {
 
     /// 判断是否拥有权限
     public static func result(with authorizationType: QAuthorizationType, handle: ((_ result: QAuthorizationResult) -> Void)?) {
-        #if DEBUG
-        let key = authorizationType.rawValue
-        if !key.hasPrefix("notconfig") {
-            let hasKey: Bool = !Bundle.main.object(forInfoDictionaryKey: authorizationType.rawValue).qisEmpty
-            assert(hasKey, "\n\n\n需要在 info.plist 里添加:\(authorizationType.rawValue)")
-        }
-        #endif
-        let res: ((_ result: QAuthorizationResult) -> Void)? = { res in
-            if Thread.isMainThread {
-                handle?(res)
-            } else {
-                DispatchQueue.main.async {
-                    handle?(res)
-                }
-            }
-        }
-        switch authorizationType {
-        case .camera:
-            self.shared.requestCamera(result: res)
-        case .photoLibrary:
-            self.shared.requestPhotoLibrary(result: res)
-        case .microphone:
-            self.shared.requestMicrophone(result: res)
-        case .notification:
-            self.shared.requestNotification(result: res)
-        case .contact:
-            self.shared.requestContact(result: res)
-        case .locationWhenInUse:
-            self.shared.requestLocation(type: .authorizedWhenInUse, result: res)
-        case .locationAlways:
-            self.shared.requestLocation(type: .authorizedAlways, result: res)
-        case .events:
-            self.shared.requestEvents(type: .event, result: res)
-        case .reminder:
-            self.shared.requestEvents(type: .reminder, result: res)
-        case .appleMusic:
-            self.shared.requestAppleMusic(result: res)
-        case .speech:
-            self.shared.requestSpeech(result: res)
-        case .siri:
-            self.shared.requestSiri(result: res)
-        case .motion:
-            self.shared.requestMotion(result: res)
-        case .idfa:
-            self.shared.requestIdfa(result: res)
-        }
+//        #if DEBUG
+//        let key = authorizationType.rawValue
+//        if !key.hasPrefix("notconfig") {
+//            let hasKey: Bool = !Bundle.main.object(forInfoDictionaryKey: authorizationType.rawValue).qisEmpty
+//            assert(hasKey, "\n\n\n需要在 info.plist 里添加:\(authorizationType.rawValue)")
+//        }
+//        #endif
+//        let res: ((_ result: QAuthorizationResult) -> Void)? = { res in
+//            if Thread.isMainThread {
+//                handle?(res)
+//            } else {
+//                DispatchQueue.main.async {
+//                    handle?(res)
+//                }
+//            }
+//        }
+//        switch authorizationType {
+//        case .camera:
+//            self.shared.requestCamera(result: res)
+//        case .photoLibrary:
+//            self.shared.requestPhotoLibrary(result: res)
+//        case .microphone:
+//            self.shared.requestMicrophone(result: res)
+//        case .notification:
+//            self.shared.requestNotification(result: res)
+//        case .contact:
+//            self.shared.requestContact(result: res)
+//        case .locationWhenInUse:
+//            self.shared.requestLocation(type: .authorizedWhenInUse, result: res)
+//        case .locationAlways:
+//            self.shared.requestLocation(type: .authorizedAlways, result: res)
+//        case .events:
+//            self.shared.requestEvents(type: .event, result: res)
+//        case .reminder:
+//            self.shared.requestEvents(type: .reminder, result: res)
+//        case .appleMusic:
+//            self.shared.requestAppleMusic(result: res)
+//        case .speech:
+//            self.shared.requestSpeech(result: res)
+//        case .siri:
+//            self.shared.requestSiri(result: res)
+//        case .motion:
+//            self.shared.requestMotion(result: res)
+//        case .idfa:
+//            self.shared.requestIdfa(result: res)
+//        }
     }
 }
 /// 权限获取
